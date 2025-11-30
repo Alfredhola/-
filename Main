@@ -1,617 +1,923 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>RG Golf Pairing V15</title>
-<style>
-    :root {
-        --primary: #1B5E20;      /* Golf Green */
-        --primary-light: #E8F5E9;
-        --secondary: #002D56;    /* Navy */
-        --accent: #F9A825;       /* Gold/Sand */
-        --bg: #F4F6F8;
-        --white: #FFFFFF;
-        --text: #37474F;
-        --text-light: #90A4AE;
-        --male-color: #0277BD;   /* Blue for Men */
-        --female-color: #C2185B; /* Rose for Women */
-        --radius: 12px;
-        --shadow: 0 4px 12px rgba(0,0,0,0.06);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RG Golf Pairing Pro</title>
+    <style>
+        :root {
+            --primary: #1e4d2b;       /* Masters Green */
+            --primary-light: #e8f5e9;
+            --accent: #d4a017;        /* Gold/Sand */
+            --bg: #f0f2f5;
+            --white: #ffffff;
+            --text-dark: #1a1a1a;
+            --text-gray: #5f6368;
+            --border: #dadce0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+            
+            --male-color: #1976d2;
+            --female-color: #c2185b;
+            --error: #d32f2f;
+            --success: #2e7d32;
+        }
 
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        background-color: var(--bg); color: var(--text);
-        margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh;
-        -webkit-font-smoothing: antialiased;
-    }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
 
-    /* --- Header --- */
-    header {
-        background: var(--white);
-        padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
-    }
-    header h1 { margin: 0; font-size: 18px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
-    header .badge { font-size: 10px; background: var(--primary-light); color: var(--primary); padding: 3px 8px; border-radius: 20px; font-weight: bold; }
+        /* Layout & Container */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-    .container { max-width: 600px; margin: 0 auto; padding: 15px; width: 100%; box-sizing: border-box; flex: 1; }
+        /* Header */
+        header {
+            background: var(--white);
+            padding: 16px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 0 0 var(--radius) var(--radius);
+            margin-bottom: 20px;
+        }
 
-    /* --- Stepper --- */
-    .step-indicator {
-        display: flex; margin-bottom: 20px; background: var(--white);
-        border-radius: 50px; padding: 5px; box-shadow: var(--shadow);
-    }
-    .step {
-        flex: 1; text-align: center; padding: 10px; font-size: 13px; font-weight: 600;
-        color: var(--text-light); cursor: pointer; border-radius: 40px; transition: 0.3s;
-    }
-    .step.active { background-color: var(--primary); color: white; box-shadow: 0 2px 5px rgba(27,94,32,0.3); }
+        header h1 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-    /* --- Cards & Inputs --- */
-    .card {
-        background: var(--white); padding: 20px;
-        border-radius: var(--radius); box-shadow: var(--shadow);
-        margin-bottom: 20px; animation: fadeIn 0.3s ease-out;
-    }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .version-badge {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
 
-    h2 {
-        margin: 0 0 15px 0; font-size: 16px; font-weight: 700; color: var(--secondary);
-        display: flex; align-items: center; gap: 8px;
-    }
-    h2::before { content: ''; display: block; width: 4px; height: 16px; background: var(--accent); border-radius: 2px; }
+        /* Stepper */
+        .stepper {
+            display: flex;
+            background: var(--white);
+            padding: 6px;
+            border-radius: 50px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
 
-    textarea {
-        width: 100%; height: 160px; padding: 15px;
-        border: 2px solid #EEE; border-radius: var(--radius); background: #FAFAFA;
-        font-family: monospace; font-size: 15px; resize: none; box-sizing: border-box;
-        transition: 0.2s; outline: none;
-    }
-    textarea:focus { border-color: var(--primary); background: #FFF; }
+        .step-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-gray);
+            cursor: pointer;
+            border-radius: 40px;
+            transition: all 0.3s ease;
+        }
 
-    /* --- Buttons --- */
-    .btn {
-        padding: 14px; border: none; border-radius: var(--radius);
-        font-size: 15px; font-weight: 700; cursor: pointer;
-        display: flex; align-items: center; justify-content: center; gap: 8px;
-        width: 100%; box-sizing: border-box; margin-top: 12px;
-        transition: 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    .btn:active { transform: scale(0.98); }
-    .btn-primary { background-color: var(--primary); color: white; }
-    .btn-secondary { background-color: var(--secondary); color: white; }
-    .btn-outline { background: white; border: 1px solid #DDD; color: var(--text); box-shadow: none; }
-    .btn-green { background: #2E7D32; color: white; }
-    .btn:disabled { background-color: #E0E0E0; color: #9E9E9E; cursor: not-allowed; box-shadow: none; }
+        .step-item.active {
+            background-color: var(--primary);
+            color: var(--white);
+            box-shadow: 0 2px 4px rgba(30, 77, 43, 0.3);
+        }
 
-    /* --- List Item (Step 2) --- */
-    .assign-list { display: flex; flex-direction: column; gap: 10px; }
-    .assign-item {
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 10px; background: #FFF; border: 1px solid #EEE; border-radius: 8px;
-        transition: 0.2s;
-    }
-    .assign-item:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.4s ease-out;
+        }
 
-    .name-edit {
-        border: none; background: transparent; font-weight: 600; color: var(--text);
-        font-size: 15px; width: 100%; padding: 5px 0; margin-left: 8px;
-    }
-    .name-edit:focus { outline: none; border-bottom: 2px solid var(--accent); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-    .hcp-input {
-        width: 45px; padding: 6px; border: 1px solid #DDD; border-radius: 6px; 
-        text-align: center; font-weight: bold; color: var(--secondary); font-size: 14px;
-    }
-    
-    .gender-toggle {
-        width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
-        border-radius: 50%; cursor: pointer; border: 1px solid #EEE; font-size: 14px; flex-shrink: 0;
-        transition: 0.2s;
-    }
-    .gender-toggle.female { background: #FCE4EC; color: var(--female-color); border-color: #F8BBD0; }
-    .gender-toggle.male { background: #E3F2FD; color: var(--male-color); border-color: #BBDEFB; }
+        h2 {
+            margin: 0 0 16px 0;
+            font-size: 18px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h2::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
 
-    .btn-del {
-        background: none; border: none; color: #E57373; font-size: 18px; 
-        cursor: pointer; margin-left: 10px; padding: 5px;
-    }
+        /* Forms & Inputs */
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 16px;
+            font-family: monospace;
+            resize: none;
+            box-sizing: border-box;
+            transition: 0.2s;
+            background: #fafafa;
+        }
 
-    /* --- Scorecard (Step 3) --- */
-    .scorecard {
-        background: white; border-radius: var(--radius); overflow: hidden; margin-bottom: 16px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08); 
-        border-left: 6px solid var(--primary);
-    }
-    .scorecard.invalid { border-left-color: #E53935; background: #FFEBEE; }
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #fff;
+        }
 
-    .scorecard-header {
-        padding: 10px 15px; background: #FFF; display: flex; justify-content: space-between; align-items: center;
-        border-bottom: 1px solid #F0F0F0;
-    }
-    .group-info { display: flex; align-items: baseline; gap: 8px; }
-    .group-title { font-weight: 800; color: var(--secondary); font-size: 14px; text-transform: uppercase; }
-    .group-stats { font-size: 11px; color: #888; background: #F5F5F5; padding: 2px 6px; border-radius: 4px; }
+        .input-helper {
+            font-size: 13px;
+            color: var(--text-gray);
+            margin-bottom: 12px;
+            background: var(--primary-light);
+            padding: 10px;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
 
-    table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    td { padding: 8px 15px; border-bottom: 1px solid #FAFAFA; vertical-align: middle; }
-    tr:last-child td { border-bottom: none; }
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
 
-    .p-name { font-weight: 600; font-size: 15px; display: block; margin-bottom: 2px; }
-    .p-name.male { color: var(--male-color); }
-    .p-name.female { color: var(--female-color); }
+        .btn:active { transform: scale(0.98); }
+        .btn:disabled { background: #ccc !important; cursor: not-allowed; }
 
-    .move-select {
-        padding: 2px 6px; border: 1px solid #EEE; border-radius: 4px; background: #FFF;
-        color: #999; font-size: 11px; margin-top: 2px;
-    }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(30, 77, 43, 0.2); }
+        .btn-secondary { background: var(--white); border: 2px solid var(--border); color: var(--text-gray); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-ghost { background: transparent; color: var(--text-gray); font-size: 14px; width: auto; padding: 8px 16px; }
 
-    /* Order Arrows */
-    .order-actions { display: flex; gap: 2px; }
-    .arrow-btn {
-        background: transparent; border: 1px solid #EEE; border-radius: 4px;
-        width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
-        cursor: pointer; color: #78909C; transition: 0.2s;
-    }
-    .arrow-btn:hover { background: #ECEFF1; color: var(--secondary); }
+        /* Step 2: List */
+        .player-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            background: white;
+            transition: 0.2s;
+        }
+        .player-row:last-child { border-bottom: none; }
+        .player-row:hover { background: #f9f9f9; }
 
-    /* Toast Notification */
-    #toast {
-        visibility: hidden; min-width: 250px; background-color: #333; color: #fff;
-        text-align: center; border-radius: 8px; padding: 12px; position: fixed;
-        z-index: 999; left: 50%; bottom: 30px; transform: translateX(-50%); opacity: 0; transition: opacity 0.3s;
-    }
-    #toast.show { visibility: visible; opacity: 1; }
+        .gender-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: 0.2s;
+        }
+        .gender-btn.male { background: #e3f2fd; color: var(--male-color); border-color: #bbdefb; }
+        .gender-btn.female { background: #fce4ec; color: var(--female-color); border-color: #f8bbd0; }
 
-    .hidden { display: none !important; }
-    .info-text { font-size: 12px; color: #78909C; line-height: 1.5; margin-bottom: 10px; }
-</style>
+        .name-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-dark);
+            padding: 5px;
+        }
+        .name-input:focus { outline: none; border-bottom: 2px solid var(--accent); }
+
+        .hcp-badge {
+            background: var(--bg);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-gray);
+            width: 45px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .btn-icon {
+            background: none; border: none; font-size: 20px; color: #ef5350; cursor: pointer; padding: 5px;
+        }
+
+        /* Settings Grid */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .setting-item label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-gray);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+        .setting-item select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: white;
+            font-size: 14px;
+        }
+
+        /* Step 3: Scorecards */
+        .scorecard {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            border-left: 6px solid var(--primary);
+            position: relative;
+        }
+        .scorecard.invalid {
+            border-left-color: var(--error);
+        }
+        .scorecard.invalid::after {
+            content: '⚠️ 人數需為 3 或 4 人';
+            position: absolute;
+            top: 10px;
+            right: 50px; /* space for arrows */
+            font-size: 11px;
+            color: var(--error);
+            font-weight: bold;
+            background: #ffebee;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .sc-header {
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sc-title { font-weight: 800; color: var(--primary); font-size: 15px; }
+        .sc-stats { font-size: 12px; color: var(--text-gray); background: #eee; padding: 2px 8px; border-radius: 10px; }
+
+        .sc-table { width: 100%; border-collapse: collapse; }
+        .sc-table td { padding: 10px 16px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+        .sc-table tr:last-child td { border-bottom: none; }
+        
+        .p-name { font-weight: 600; font-size: 15px; display: block; }
+        .p-name.male { color: var(--male-color); }
+        .p-name.female { color: var(--female-color); }
+        
+        .move-select {
+            font-size: 11px;
+            color: var(--text-gray);
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 2px;
+            margin-top: 4px;
+            background: white;
+        }
+
+        .sc-controls { display: flex; gap: 4px; }
+        .arrow-btn {
+            width: 28px; height: 28px;
+            border: 1px solid #eee; background: white;
+            border-radius: 6px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-gray);
+        }
+        .arrow-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* Toast */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #323232;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 14px;
+            position: fixed;
+            z-index: 999;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        #toast.show { visibility: visible; opacity: 1; bottom: 40px; }
+
+        .hidden { display: none !important; }
+        
+        /* Add Player Row */
+        .add-player-row {
+            display: flex; gap: 8px; background: var(--primary-light); padding: 10px; border-radius: 8px; margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
 
 <header>
-    <div style="display:flex; align-items:center; gap:8px;">
-        <h1>RG PAIRING</h1>
-        <span class="badge">V15</span>
-    </div>
+    <h1>⛳️ RG PAIRING <span class="version-badge">PRO</span></h1>
 </header>
 
 <div class="container">
-    
-    <div class="step-indicator">
-        <div class="step active" id="tab-1" onclick="goToStep(1)">1. 輸入</div>
-        <div class="step" id="tab-2" onclick="goToStep(2)">2. 編輯</div>
-        <div class="step" id="tab-3">3. 結果</div>
+
+    <!-- Step Navigation -->
+    <div class="stepper">
+        <div class="step-item active" id="tab-1" onclick="app.goToStep(1)">1. 名單輸入</div>
+        <div class="step-item" id="tab-2" onclick="app.goToStep(2)">2. 編輯設定</div>
+        <div class="step-item" id="tab-3">3. 分組結果</div>
     </div>
 
-    <!-- STEP 1: Input -->
+    <!-- VIEW 1: Input -->
     <div id="view-1">
         <div class="card">
-            <h2>名單輸入</h2>
-            <div class="info-text">
-                • 系統將自動把「中文姓名」排在前面<br>
-                • 支援符號、英文、中英混和<br>
-                • 格式：姓名 HCP (一行一人)
+            <h2><span style="font-size:24px;">📝</span> 輸入名單</h2>
+            <div class="input-helper">
+                💡 支援格式：姓名 + 差點 (一行一人)<br>
+                例如：<code>王小明 18</code> 或 <code>Jason Day 2</code><br>
+                系統將自動辨識性別與中文姓名優先排序。
             </div>
-            <textarea id="input-text" placeholder="格式範例：&#10;Jason 林 12&#10;王大明 18&#10;Vikki 👑 24"></textarea>
+            <textarea id="input-text" placeholder="貼上名單於此...&#10;張三 12&#10;Mary 24&#10;李四 18"></textarea>
             
-            <button class="btn btn-primary" onclick="processInput()">下一步：解析名單 ➔</button>
-        </div>
-        <div style="display:flex; gap:10px; justify-content:center;">
-             <button class="btn btn-outline" style="width:auto; padding:8px 20px;" onclick="loadDemoData()">載入範例 (明星版)</button>
-             <button class="btn btn-outline" style="width:auto; padding:8px 20px;" onclick="clearInput()">清空</button>
+            <button class="btn btn-primary" onclick="app.processInput()">下一步：解析名單 ➔</button>
+            <div style="display:flex; justify-content: center; gap: 10px; margin-top: 15px;">
+                <button class="btn btn-ghost" onclick="app.loadDemo()">載入範例</button>
+                <button class="btn btn-ghost" onclick="app.clearInput()" style="color:#ef5350;">清空</button>
+            </div>
         </div>
     </div>
 
-    <!-- STEP 2: Configure & Edit -->
+    <!-- VIEW 2: Edit & Configure -->
     <div id="view-2" class="hidden">
         <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h2>編輯與設定</h2>
-                <span id="player-count-info" style="font-size:12px; font-weight:bold; color:var(--primary);"></span>
+                <h2><span style="font-size:24px;">⚙️</span> 編輯與設定</h2>
+                <span id="player-count-badge" class="version-badge" style="font-size:13px;">0 人</span>
             </div>
-            
+
             <!-- Quick Add -->
-            <div style="display:flex; gap:8px; margin-bottom:15px; background:#F1F8E9; padding:8px; border-radius:8px;">
-                <input id="new-name" class="name-edit" style="margin:0; background:white; padding:8px; border-radius:4px;" placeholder="新增姓名...">
-                <input id="new-hcp" type="number" class="hcp-input" style="width:50px; background:white;" placeholder="HCP">
-                <button class="btn-primary" style="width:40px; margin:0;" onclick="manualAddPlayer()">+</button>
+            <div class="add-player-row">
+                <input id="new-name" class="name-input" style="background:white; border-radius:4px; padding:8px;" placeholder="新增姓名...">
+                <input id="new-hcp" type="number" class="hcp-badge" style="width:60px; background:white;" placeholder="HCP">
+                <button class="btn-primary" style="width:auto; margin:0; padding:0 15px; border-radius:6px;" onclick="app.manualAdd()">+</button>
             </div>
 
-            <div class="assign-list" id="player-list"></div>
+            <!-- List -->
+            <div id="player-list-container" style="max-height: 400px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px;">
+                <!-- Items injected here -->
+            </div>
 
-            <div style="margin-top:20px; border-top:1px solid #EEE; padding-top:20px;">
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                    <div>
-                        <label style="font-size:11px; font-weight:700; color:#888; text-transform:uppercase;">HCP 策略</label>
-                        <select id="hcp-logic" style="width:100%; padding:8px; border-radius:6px; border:1px solid #DDD; margin-top:4px;">
-                            <option value="total_balanced" selected>⚖️ 總和平均</option>
-                            <option value="competitive">⚔️ 實力相近</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label style="font-size:11px; font-weight:700; color:#888; text-transform:uppercase;">性別分配</label>
-                        <select id="gender-logic" style="width:100%; padding:8px; border-radius:6px; border:1px solid #DDD; margin-top:4px;">
-                            <option value="balanced" selected>👫 平均混編</option>
-                            <option value="random">🎲 隨機分配</option>
-                        </select>
-                    </div>
+            <!-- Settings -->
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <label>⚖️ 分組策略</label>
+                    <select id="hcp-strategy">
+                        <option value="balanced_snake" selected>總和平均 (S型排序)</option>
+                        <option value="competitive">實力分層 (強強/弱弱)</option>
+                        <option value="random">完全隨機</option>
+                    </select>
                 </div>
-
-                <button class="btn btn-secondary" onclick="generateResult()">開始分組 ⛳</button>
+                <div class="setting-item">
+                    <label>👫 性別分配</label>
+                    <select id="gender-strategy">
+                        <option value="mixed" selected>平均混編</option>
+                        <option value="separate">男女分開</option>
+                    </select>
+                </div>
             </div>
+
+            <button class="btn btn-primary" onclick="app.generatePairings()">開始分組 ⛳</button>
         </div>
     </div>
 
-    <!-- STEP 3: Results -->
+    <!-- VIEW 3: Results -->
     <div id="view-3" class="hidden">
-        <div style="margin-bottom:15px; display:flex; gap:10px;">
-            <button class="btn btn-outline" style="margin:0; flex:1;" onclick="goToStep(1)">↺ 重來</button>
-            <button id="btn-export" class="btn btn-green" style="margin:0; flex:2;" onclick="exportText()" disabled>📋 複製名單</button>
+        <div class="card" style="padding: 16px; background: var(--primary-light); border: 1px solid var(--primary);">
+            <div style="display:flex; justify-content: space-between; font-size: 13px; font-weight:bold; color:var(--primary);">
+                <span id="res-total-players"></span>
+                <span id="res-group-structure"></span>
+            </div>
         </div>
-        
-        <div id="result-container"></div>
-        <div style="height:30px;"></div>
+
+        <div id="results-container"></div>
+
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button class="btn btn-secondary" onclick="app.goToStep(1)">↺ 重新開始</button>
+            <button id="btn-export" class="btn btn-success" onclick="app.copyToClipboard()">📋 複製文字名單</button>
+        </div>
+        <div style="height: 40px;"></div>
     </div>
 
 </div>
 
-<!-- Toast -->
-<div id="toast">已複製到剪貼簿</div>
+<div id="toast">Message</div>
 
 <script>
-    let allPlayers = [];
-    const MIN_PER_GROUP = 3;
-    const MAX_PER_GROUP_STRICT = 4;
-    const MANUAL_MAX_PER_GROUP = 5;
+/**
+ * RG Golf Pairing App Logic
+ * Designed for strict 3-4 person grouping.
+ */
+const app = {
+    data: {
+        players: [],
+        groups: [],
+        idCounter: 1
+    },
+    
+    config: {
+        minGroup: 3,
+        maxGroup: 4
+    },
 
-    let idCounter = 1;
-    let finalGroups = [];
-
-    // --- Demo Data (International Stars) ---
-    function loadDemoData() {
-        document.getElementById('input-text').value = 
-`1. Tom 湯姆克魯斯 12
-2. Taylor Swift 泰勒絲 24
-3. 👑 The Rock 15
-4. Scarlett 黑寡婦 🕷️ 18
-5. Tiger Woods 0
-6. Stephen Curry 🏀 8
-7. Jennifer L. 珍妮佛 28
-8. Leonardo 李奧納多 14`;
-    }
-    function clearInput() { document.getElementById('input-text').value = ''; }
-
-    // --- Step 1: Logic ---
-    function processInput() {
-        const raw = document.getElementById('input-text').value.trim();
-        if (!raw) { showToast("請輸入資料"); return; }
+    // --- Navigation ---
+    goToStep: (step) => {
+        document.querySelectorAll('.step-item').forEach(el => el.classList.remove('active'));
+        document.getElementById(`tab-${step}`).classList.add('active');
         
-        const lines = raw.split('\n');
-        allPlayers = [];
-        idCounter = 1;
-        
-        const femaleKeywords = ["Mrs", "Ms", "Miss", "Lady", "女", "姐", "妹"];
-        const femaleEmojiString = "🩷❤️🧡💛💜💙🩵💚🖤🩶🤍🤎💕💞💓💗❣️💖💘💝💟🧘‍♀️✨⭐️🌟🌹🦄👑👠👗👙🙋‍♀️🙎‍♀️🙆‍♀️💁‍♀️👸🏻👩‍🦰👩🏻👧💋😍";
-        const femaleEmojis = [...femaleEmojiString]; 
-        const leadingNumbers = /^[\d\.\s\)\-\]]+/;
+        ['view-1', 'view-2', 'view-3'].forEach(id => document.getElementById(id).classList.add('hidden'));
+        document.getElementById(`view-${step}`).classList.remove('hidden');
+        window.scrollTo(0, 0);
+    },
 
-        lines.forEach(line => {
-            let cleanLine = line.trim();
-            if (!cleanLine) return;
-            // 1. Remove leading ranking numbers (e.g., "1. ")
-            cleanLine = cleanLine.replace(leadingNumbers, '').trim(); 
-
-            // 2. Extract HCP (numbers at the end)
-            let hcp = 0;
-            const hcpMatch = cleanLine.match(/(\d+(\.\d+)?)$/);
-            if (hcpMatch) {
-                hcp = parseFloat(hcpMatch[0]);
-                cleanLine = cleanLine.substring(0, hcpMatch.index).trim();
-            }
-
-            // 3. Detect Gender (Check before cleaning name)
-            let isFemale = false;
-            // Check regex text keywords
-            if (new RegExp(femaleKeywords.join('|'), 'i').test(cleanLine)) isFemale = true;
-            // Check emojis
-            if (femaleEmojis.some(emoji => cleanLine.includes(emoji))) isFemale = true;
-            
-            // Auto detect common female names (Simple heuristic for demo)
-            if (/Taylor|Scarlett|Jennifer|Amy|Vikki|Lisa/i.test(cleanLine)) isFemale = true;
-
-            // 4. Clean Name
-            // Remove text keywords
-            let namePart = cleanLine.replace(new RegExp(femaleKeywords.join('|'), 'gi'), '');
-            // Remove specific gender emojis (but keep other emojis if needed)
-            femaleEmojis.forEach(e => { namePart = namePart.split(e).join(''); });
-            namePart = namePart.trim();
-
-            // 5. Robust Reordering: Chinese First
-            // Extract Chinese characters
-            const chineseMatch = namePart.match(/[\u4e00-\u9fa5]+/g);
-            const chineseStr = chineseMatch ? chineseMatch.join('') : "";
-            
-            // Remove Chinese to get the rest (English, numbers inside name, other symbols)
-            let engStr = namePart.replace(/[\u4e00-\u9fa5]+/g, '').trim();
-
-            // Reassemble
-            let finalName = "";
-            if (chineseStr && engStr) {
-                finalName = `${chineseStr} ${engStr}`;
-            } else {
-                // If only one part exists
-                finalName = chineseStr || engStr || "Player";
-            }
-
-            allPlayers.push({
-                id: idCounter++,
-                name: finalName,
-                hcp: hcp, 
-                gender: isFemale ? 'F' : 'M'
-            });
-        });
-
-        updateCountInfo();
-        renderPlayerList();
-        goToStep(2);
-    }
-
-    // --- Step 2: Edit UI ---
-    function updateCountInfo() {
-        document.getElementById('player-count-info').innerText = `共 ${allPlayers.length} 人`;
-    }
-
-    function renderPlayerList() {
-        const listDiv = document.getElementById('player-list');
-        listDiv.innerHTML = "";
-
-        allPlayers.forEach(p => {
-            const div = document.createElement('div');
-            div.className = `assign-item`;
-            const genderClass = p.gender === 'F' ? 'female' : 'male';
-            const genderIcon = p.gender === 'F' ? '♀' : '♂';
-
-            div.innerHTML = `
-                <div style="display:flex; align-items:center; flex:1;">
-                    <div class="gender-toggle ${genderClass}" onclick="toggleGender(${p.id})">${genderIcon}</div>
-                    <input type="text" class="name-edit" value="${p.name}" onchange="updatePlayerName(${p.id}, this.value)">
-                </div>
-                <div style="display:flex; align-items:center;">
-                    <input type="number" class="hcp-input" value="${p.hcp}" onchange="updatePlayerHcp(${p.id}, this.value)">
-                    <button class="btn-del" onclick="deletePlayer(${p.id})">×</button>
-                </div>
-            `;
-            listDiv.appendChild(div);
-        });
-    }
-
-    // Edit Actions
-    function manualAddPlayer() {
-        const nameInput = document.getElementById('new-name');
-        const hcpInput = document.getElementById('new-hcp');
-        const name = nameInput.value.trim();
-        const hcp = parseFloat(hcpInput.value) || 0;
-        if (name) {
-            allPlayers.push({ id: idCounter++, name: name, hcp: hcp, gender: 'M' });
-            nameInput.value = ''; hcpInput.value = '';
-            updateCountInfo(); renderPlayerList();
-        }
-    }
-    function deletePlayer(pid) {
-        allPlayers = allPlayers.filter(p => p.id !== pid);
-        updateCountInfo(); renderPlayerList();
-    }
-    function updatePlayerName(pid, val) { allPlayers.find(x => x.id === pid).name = val.trim(); }
-    function updatePlayerHcp(pid, val) { allPlayers.find(x => x.id === pid).hcp = parseFloat(val) || 0; }
-    function toggleGender(pid) { 
-        const p = allPlayers.find(x => x.id === pid);
-        if (p) { p.gender = p.gender === 'M' ? 'F' : 'M'; renderPlayerList(); }
-    }
-
-    // --- Step 3: Algorithm ---
-    function generateResult() {
-        if(allPlayers.length === 0) { showToast("名單為空"); return; }
-        
-        const genderLogic = document.getElementById('gender-logic').value; 
-        const hcpLogic = document.getElementById('hcp-logic').value;
-        
-        let pool = JSON.parse(JSON.stringify(allPlayers)); // Deep copy
-        const totalPeople = pool.length;
-        const numGroups = Math.ceil(totalPeople / 4);
-        let groups = Array.from({length: numGroups}, () => []);
-
-        // Sort Helper
-        const sortByHcpDesc = (list) => list.sort((a,b) => b.hcp - a.hcp);
-        const sortByHcpAsc = (list) => list.sort((a,b) => a.hcp - b.hcp);
-
-        if (hcpLogic === 'total_balanced') {
-            // S-Shape (Snake) Distribution
-            if(genderLogic === 'balanced') {
-                // Separate genders
-                let ladies = pool.filter(p=>p.gender==='F');
-                let men = pool.filter(p=>p.gender==='M');
-                sortByHcpDesc(ladies);
-                sortByHcpDesc(men);
-
-                // Distribute Ladies (Snake)
-                ladies.forEach((p, i) => {
-                    let pos = i % numGroups;
-                    let gIdx = (Math.floor(i / numGroups) % 2 === 0) ? pos : (numGroups - 1 - pos);
-                    groups[gIdx].push(p);
-                });
-
-                // Distribute Men 
-                men.forEach(p => {
-                    // Greedy fill: find group with < 4 people and lowest total HCP
-                    let eligible = groups.map((g, i) => ({id: i, count: g.length, total: g.reduce((s,x)=>s+x.hcp,0)}))
-                                         .filter(g => g.count < MAX_PER_GROUP_STRICT);
-                    
-                    if(eligible.length === 0) { 
-                        groups[groups.length-1].push(p); // Overflow
-                    } else {
-                        eligible.sort((a,b) => a.total - b.total);
-                        groups[eligible[0].id].push(p);
-                    }
-                });
-
-            } else {
-                // Mixed gender, just sort by HCP
-                sortByHcpDesc(pool);
-                pool.forEach((p, i) => {
-                    let pos = i % numGroups;
-                    let gIdx = (Math.floor(i / numGroups) % 2 === 0) ? pos : (numGroups - 1 - pos);
-                    groups[gIdx].push(p);
-                });
-            }
-        } else {
-            // Competitive: Group by HCP slices (1-4, 5-8...)
-            sortByHcpAsc(pool);
-            pool.forEach((p, i) => {
-                const gIdx = Math.floor(i / 4);
-                if(groups[gIdx]) groups[gIdx].push(p);
-                else groups[groups.length-1].push(p); // Overflow
-            });
-        }
-
-        finalGroups = groups;
-        renderResults();
-        goToStep(3);
-    }
-
-    // --- Step 3: Render ---
-    function renderResults() {
-        const container = document.getElementById('result-container');
-        const btnExport = document.getElementById('btn-export');
-        container.innerHTML = "";
-        let allValid = true; 
-
-        finalGroups.forEach((g, idx) => {
-            if(g.length === 0) return;
-            
-            const totalHcp = g.reduce((s,p)=>s+p.hcp,0);
-            g.sort((a,b) => a.hcp - b.hcp); // Display order: Low to High
-
-            let isValid = (g.length >= MIN_PER_GROUP && g.length <= MAX_PER_GROUP_STRICT);
-            if (!isValid) allValid = false;
-            
-            let cardClass = isValid ? "scorecard" : "scorecard invalid";
-
-            let rows = g.map(p => {
-                const colorClass = p.gender === 'F' ? 'female' : 'male';
-                
-                // Move Options
-                let moveOpts = "";
-                for(let i=0; i<finalGroups.length; i++) {
-                     let selected = (i === idx) ? "selected" : "";
-                     moveOpts += `<option value="${i}" ${selected}>移至 G${i+1}</option>`;
-                }
-
-                return `
-                <tr>
-                    <td>
-                        <span class="p-name ${colorClass}">${p.name}</span>
-                        <div style="display:flex;">
-                            <select class="move-select" onchange="manualMove(${p.id}, ${idx}, this.value)">${moveOpts}</select>
-                        </div>
-                    </td>
-                    <td style="text-align:right; font-weight:700; color:#546E7A;">${p.hcp}</td>
-                </tr>`;
-            }).join('');
-
-            // Arrow Controls
-            let upBtn = idx > 0 ? 
-                `<button class="arrow-btn" onclick="swapGroup(${idx}, -1)">▲</button>` : `<div style="width:28px;"></div>`;
-            let downBtn = idx < finalGroups.length - 1 ? 
-                `<button class="arrow-btn" onclick="swapGroup(${idx}, 1)">▼</button>` : `<div style="width:28px;"></div>`;
-
-            container.innerHTML += `
-                <div class="${cardClass}">
-                    <div class="scorecard-header">
-                        <div class="group-info">
-                            <span class="group-title">GROUP ${idx+1}</span>
-                            <span class="group-stats">HCP ${totalHcp.toFixed(1)}</span>
-                        </div>
-                        <div class="order-actions">
-                            ${upBtn} ${downBtn}
-                        </div>
-                    </div>
-                    <table>${rows}</table>
-                </div>`;
-        });
-
-        if (allValid && finalGroups.length > 0) {
-            btnExport.disabled = false;
-            btnExport.textContent = "📋 複製文字名單";
-            btnExport.classList.add('btn-green');
-        } else {
-            btnExport.disabled = true;
-            btnExport.textContent = "⚠️ 請修正人數 (3-4人)";
-            btnExport.classList.remove('btn-green');
-        }
-    }
-
-    // --- Actions ---
-    function manualMove(pid, fromIdx, toIdx) {
-        fromIdx = parseInt(fromIdx); toIdx = parseInt(toIdx);
-        if(fromIdx === toIdx) return;
-        
-        if(finalGroups[toIdx].length >= MANUAL_MAX_PER_GROUP) {
-            showToast("該組人數已達上限");
-            renderResults(); // Reset dropdown
-            return;
-        }
-        
-        let pIndex = finalGroups[fromIdx].findIndex(p => p.id === pid);
-        if(pIndex > -1) {
-            let player = finalGroups[fromIdx].splice(pIndex, 1)[0];
-            finalGroups[toIdx].push(player);
-            renderResults();
-        }
-    }
-
-    function swapGroup(index, direction) {
-        let newIndex = index + direction;
-        if(newIndex < 0 || newIndex >= finalGroups.length) return;
-        [finalGroups[index], finalGroups[newIndex]] = [finalGroups[newIndex], finalGroups[index]];
-        renderResults();
-    }
-
-    function exportText() {
-        let text = "⛳️ 高爾夫分組名單\n==================\n";
-        finalGroups.forEach((g, idx) => {
-            if(g.length === 0) return;
-            text += `\n[第 ${idx+1} 組] \n`;
-            g.forEach(p => {
-                text += `- ${p.name} (${p.hcp})\n`;
-            });
-            let total = g.reduce((s,p)=>s+p.hcp,0);
-            text += `> Total HCP: ${total.toFixed(1)}\n`;
-        });
-        
-        navigator.clipboard.writeText(text).then(() => {
-            showToast("✅ 名單已複製");
-        }).catch(() => {
-            showToast("❌ 複製失敗");
-        });
-    }
-
-    function showToast(msg) {
+    showToast: (msg) => {
         const t = document.getElementById("toast");
         t.innerText = msg;
         t.className = "show";
         setTimeout(() => { t.className = t.className.replace("show", ""); }, 3000);
-    }
+    },
 
-    function goToStep(n) {
-        document.querySelectorAll('.step').forEach(e=>e.classList.remove('active'));
-        document.getElementById(`tab-${n}`).classList.add('active');
-        [1,2,3].forEach(i => document.getElementById(`view-${i}`).classList.add('hidden'));
-        document.getElementById(`view-${n}`).classList.remove('hidden');
-        window.scrollTo(0,0);
+    // --- Step 1: Input & Parsing ---
+    loadDemo: () => {
+        document.getElementById('input-text').value = 
+`Tiger Woods 0
+Rory McIlroy 2
+Scottie Scheffler 1
+Nelly Korda 👑 2
+Lydia Ko 4
+Viktor Hovland 3
+Jon Rahm 2
+Minjee Lee 5
+Jordan Spieth 4
+Justin Thomas 3
+Brooke Henderson 6
+Collin Morikawa 3
+Rickie Fowler 5
+Lexi Thompson 4`;
+    },
+
+    clearInput: () => {
+        document.getElementById('input-text').value = '';
+    },
+
+    processInput: () => {
+        const rawText = document.getElementById('input-text').value;
+        if (!rawText.trim()) {
+            app.showToast("請輸入名單");
+            return;
+        }
+
+        app.data.players = [];
+        app.data.idCounter = 1;
+        
+        const lines = rawText.split('\n');
+        const femaleKeywords = ["Mrs", "Ms", "Miss", "Lady", "女", "姐", "妹", "👑", "🌹", "❤️", "🩷"];
+        
+        lines.forEach(line => {
+            let clean = line.trim();
+            if (!clean) return;
+
+            // Remove starting numbering (e.g. "1. ")
+            clean = clean.replace(/^[\d\.\s\)\-\]]+/, '');
+
+            // Extract HCP (last number)
+            let hcp = 0;
+            const hcpMatch = clean.match(/(\d+(\.\d+)?)$/);
+            if (hcpMatch) {
+                hcp = parseFloat(hcpMatch[0]);
+                clean = clean.substring(0, hcpMatch.index).trim();
+            }
+
+            // Detect Gender
+            let isFemale = false;
+            if (new RegExp(femaleKeywords.join('|'), 'i').test(clean)) isFemale = true;
+            // Common names heuristic (optional, simplified)
+            if (/Amy|Lisa|Jennifer|Sarah|Jessica|Nelly|Lydia|Minjee|Lexi|Brooke/i.test(clean)) isFemale = true;
+
+            // Clean Name (remove emojis/keywords if needed, but keeping them is usually fine for display)
+            // Let's just remove the specific gender keywords to clean up a bit
+            let displayName = clean; // Keep original for flair
+
+            // Chinese Sorting Helper: Put Chinese chars first if mixed? 
+            // The prompt asked for optimized UX. Standard logic: Chinese name + English name.
+            // Let's rely on the user's input order but we can detect Chinese char.
+            
+            app.data.players.push({
+                id: app.data.idCounter++,
+                name: displayName,
+                hcp: hcp,
+                gender: isFemale ? 'F' : 'M'
+            });
+        });
+
+        app.updatePlayerCount();
+        app.renderPlayerList();
+        app.goToStep(2);
+    },
+
+    // --- Step 2: Edit ---
+    updatePlayerCount: () => {
+        document.getElementById('player-count-badge').innerText = `共 ${app.data.players.length} 人`;
+    },
+
+    renderPlayerList: () => {
+        const container = document.getElementById('player-list-container');
+        container.innerHTML = '';
+        
+        app.data.players.forEach(p => {
+            const div = document.createElement('div');
+            div.className = 'player-row';
+            div.innerHTML = `
+                <div class="gender-btn ${p.gender === 'M' ? 'male' : 'female'}" 
+                     onclick="app.toggleGender(${p.id})">
+                     ${p.gender === 'M' ? '♂' : '♀'}
+                </div>
+                <input class="name-input" value="${p.name}" onchange="app.updateName(${p.id}, this.value)">
+                <input type="number" class="hcp-badge" value="${p.hcp}" onchange="app.updateHcp(${p.id}, this.value)">
+                <button class="btn-icon" onclick="app.deletePlayer(${p.id})">×</button>
+            `;
+            container.appendChild(div);
+        });
+    },
+
+    manualAdd: () => {
+        const nameIn = document.getElementById('new-name');
+        const hcpIn = document.getElementById('new-hcp');
+        const name = nameIn.value.trim();
+        if(name) {
+            app.data.players.push({
+                id: app.data.idCounter++,
+                name: name,
+                hcp: parseFloat(hcpIn.value) || 0,
+                gender: 'M' // Default
+            });
+            nameIn.value = '';
+            hcpIn.value = '';
+            app.updatePlayerCount();
+            app.renderPlayerList();
+            // Scroll to bottom
+            const container = document.getElementById('player-list-container');
+            setTimeout(() => container.scrollTop = container.scrollHeight, 100);
+        }
+    },
+
+    deletePlayer: (id) => {
+        app.data.players = app.data.players.filter(p => p.id !== id);
+        app.updatePlayerCount();
+        app.renderPlayerList();
+    },
+
+    toggleGender: (id) => {
+        const p = app.data.players.find(x => x.id === id);
+        if(p) {
+            p.gender = p.gender === 'M' ? 'F' : 'M';
+            app.renderPlayerList();
+        }
+    },
+
+    updateName: (id, val) => { app.data.players.find(x => x.id === id).name = val; },
+    updateHcp: (id, val) => { app.data.players.find(x => x.id === id).hcp = parseFloat(val) || 0; },
+
+    // --- Step 3: Algorithm (The Core) ---
+    calculateGroupStructure: (total) => {
+        // Solves N = 4x + 3y to maximize x (groups of 4)
+        if (total < 3) return null;
+        if (total === 5) return null; // Impossible strictly 3 or 4
+
+        let remainder = total % 4;
+        let count4 = Math.floor(total / 4);
+        let count3 = 0;
+
+        if (remainder === 0) {
+            // Perfect 4s
+        } else if (remainder === 1) {
+            // Need to convert three 4s into four 3s? No.
+            // Example: 9. 4+4 (+1) -> 3+3+3. (Convert two 4s -> +1 -> three 3s)
+            // Example: 5. 4 (+1) -> Impossible.
+            // Example: 13. 4,4,4 (+1) -> 4,3,3,3. (Reduce 4s by 2, Add 3s by 3?) 
+            // Let's just decrement count4 until remaining is divisible by 3.
+            
+            while (count4 >= 0) {
+                let left = total - (count4 * 4);
+                if (left > 0 && left % 3 === 0) {
+                    count3 = left / 3;
+                    break;
+                }
+                count4--;
+            }
+        } else if (remainder === 2) {
+            // Example: 6. 4 (+2) -> 3,3.
+            // Example: 10. 4,4 (+2) -> 4,3,3.
+            while (count4 >= 0) {
+                let left = total - (count4 * 4);
+                if (left > 0 && left % 3 === 0) {
+                    count3 = left / 3;
+                    break;
+                }
+                count4--;
+            }
+        } else if (remainder === 3) {
+            // Perfect. One 3.
+            count3 = 1;
+        }
+
+        // Verify
+        if (count4 * 4 + count3 * 3 !== total) return null; // Should capture 5
+
+        // Create structure array [4,4,4,3,3] etc.
+        let structure = [];
+        for(let i=0; i<count4; i++) structure.push(4);
+        for(let i=0; i<count3; i++) structure.push(3);
+        return structure;
+    },
+
+    generatePairings: () => {
+        const pool = [...app.data.players]; // Copy
+        const total = pool.length;
+        
+        // 1. Determine Structure
+        const structure = app.calculateGroupStructure(total);
+        
+        if (!structure) {
+            app.showToast("❌ 無法分組：人數必須能被3或4整除 (5人不行)");
+            return;
+        }
+
+        // 2. Sort Logic
+        const hcpStrategy = document.getElementById('hcp-strategy').value;
+        const genderStrategy = document.getElementById('gender-strategy').value;
+
+        // Sorting Helper
+        const sortByHcpDesc = (arr) => arr.sort((a,b) => b.hcp - a.hcp);
+        const sortByHcpAsc = (arr) => arr.sort((a,b) => a.hcp - b.hcp);
+
+        // Prepare Groups
+        let groups = structure.map(size => ({ capacity: size, members: [] }));
+        
+        if (hcpStrategy === 'random') {
+            pool.sort(() => Math.random() - 0.5);
+            let pIdx = 0;
+            groups.forEach(g => {
+                for(let i=0; i<g.capacity; i++) g.members.push(pool[pIdx++]);
+            });
+        } else if (hcpStrategy === 'competitive') {
+            // Low HCP play together
+            sortByHcpAsc(pool);
+            let pIdx = 0;
+            groups.forEach(g => {
+                for(let i=0; i<g.capacity; i++) g.members.push(pool[pIdx++]);
+            });
+        } else {
+            // Balanced Snake
+            let listToDistribute = [];
+
+            if (genderStrategy === 'separate') {
+                // Not strictly separate groups, but fill ladies first then men?
+                // Or separate groups entirely? Assuming separate groups is hard with 4/3 constraints.
+                // Let's interpret as "Sort ladies together, then men together" for snake
+                let ladies = pool.filter(p => p.gender === 'F');
+                let men = pool.filter(p => p.gender === 'M');
+                sortByHcpDesc(ladies);
+                sortByHcpDesc(men);
+                listToDistribute = [...ladies, ...men];
+            } else {
+                // Mixed
+                listToDistribute = pool;
+                sortByHcpDesc(listToDistribute);
+            }
+
+            // Snake Distribution
+            // Since groups have different capacities (4 and 3), "column" snake is tricky.
+            // Better approach for balanced sum: 
+            // Sort by HCP. Place 1st into Group 1, 2nd into Group 2... 
+            // When reaching end, reverse direction.
+            // Constraint: Must not exceed capacity.
+
+            // Greedy Balanced Algorithm with Capacity Check
+            // Sort High to Low.
+            // Assign current highest player to the group with the LOWEST current total HCP that isn't full.
+            
+            // However, Snake is standard for golf.
+            // Let's fill slots.
+            // Total slots = total people.
+            // Groups [4, 4, 3] -> 3 groups.
+            // Snake: 0, 1, 2, 2, 1, 0, 0, 1, 2...
+            
+            listToDistribute.forEach((p, i) => {
+                // Find target group index based on snake pattern
+                let numGroups = groups.length;
+                let round = Math.floor(i / numGroups);
+                let isEvenRound = round % 2 === 0;
+                let col = i % numGroups;
+                let targetIdx = isEvenRound ? col : (numGroups - 1 - col);
+
+                // Check capacity. If target is full (e.g. it's a 3-group and we are in round 4), find neighbor
+                if (groups[targetIdx].members.length >= groups[targetIdx].capacity) {
+                    // Find first non-full group
+                    // Prefer keeping the snake logic: look adjacent? 
+                    // Simple fallback: find group with most space or lowest index
+                    let bestG = groups.find(g => g.members.length < g.capacity);
+                    if (bestG) bestG.members.push(p);
+                } else {
+                    groups[targetIdx].members.push(p);
+                }
+            });
+        }
+
+        app.data.groups = groups.map(g => g.members);
+        app.renderResults();
+        app.goToStep(3);
+    },
+
+    // --- Step 3: Render Results ---
+    renderResults: () => {
+        const container = document.getElementById('results-container');
+        container.innerHTML = '';
+
+        const groups = app.data.groups;
+        let totalP = 0;
+        let warning = false;
+        let groupSizes = [];
+
+        groups.forEach((members, idx) => {
+            if(members.length === 0) return;
+            totalP += members.length;
+            groupSizes.push(members.length);
+
+            // Valid?
+            const isValid = (members.length >= app.config.minGroup && members.length <= app.config.maxGroup);
+            if(!isValid) warning = true;
+
+            // Sort internal display by HCP (Low to High for scorecard look)
+            members.sort((a,b) => a.hcp - b.hcp);
+
+            const totalHcp = members.reduce((sum, p) => sum + p.hcp, 0);
+            
+            // Build Move Options
+            let moveOpts = '';
+            for(let i=0; i<groups.length; i++) {
+                moveOpts += `<option value="${i}" ${i === idx ? 'selected' : ''}>${i === idx ? '目前組別' : '移至 G'+(i+1)}</option>`;
+            }
+
+            let rows = members.map(p => `
+                <tr>
+                    <td>
+                        <span class="p-name ${p.gender === 'F' ? 'female' : 'male'}">${p.name}</span>
+                        <select class="move-select" onchange="app.movePlayer(${p.id}, ${idx}, this.value)">${moveOpts}</select>
+                    </td>
+                    <td style="text-align:right; font-weight:700; color:#5f6368;">${p.hcp}</td>
+                </tr>
+            `).join('');
+
+            // Controls
+            const upBtn = idx > 0 ? `<button class="arrow-btn" onclick="app.swapGroups(${idx}, -1)">▲</button>` : `<div style="width:28px"></div>`;
+            const downBtn = idx < groups.length - 1 ? `<button class="arrow-btn" onclick="app.swapGroups(${idx}, 1)">▼</button>` : `<div style="width:28px"></div>`;
+
+            const cardHtml = `
+                <div class="scorecard ${isValid ? '' : 'invalid'}">
+                    <div class="sc-header">
+                        <div>
+                            <span class="sc-title">GROUP ${idx + 1}</span>
+                            <span class="sc-stats">HCP ${totalHcp}</span>
+                        </div>
+                        <div class="sc-controls">
+                            ${upBtn}${downBtn}
+                        </div>
+                    </div>
+                    <table class="sc-table">
+                        ${rows}
+                    </table>
+                </div>
+            `;
+            container.innerHTML += cardHtml;
+        });
+
+        // Header Stats
+        document.getElementById('res-total-players').innerText = `總人數: ${totalP} 人`;
+        document.getElementById('res-group-structure').innerText = `組別分配: ${groupSizes.join(' - ')}`;
+        
+        const btnExport = document.getElementById('btn-export');
+        if (warning) {
+            btnExport.classList.replace('btn-success', 'btn-secondary');
+            btnExport.innerText = "⚠️ 組別編排異常";
+            app.showToast("警告：發現不符合 3-4 人規則的組別");
+        } else {
+            btnExport.classList.replace('btn-secondary', 'btn-success');
+            btnExport.innerText = "📋 複製文字名單";
+        }
+    },
+
+    movePlayer: (pid, fromG, toG) => {
+        fromG = parseInt(fromG);
+        toG = parseInt(toG);
+        if (fromG === toG) return;
+
+        // Execute Move
+        const pIndex = app.data.groups[fromG].findIndex(p => p.id === pid);
+        if (pIndex > -1) {
+            const player = app.data.groups[fromG].splice(pIndex, 1)[0];
+            app.data.groups[toG].push(player);
+            app.renderResults();
+        }
+    },
+
+    swapGroups: (idx, dir) => {
+        const target = idx + dir;
+        if (target >= 0 && target < app.data.groups.length) {
+            [app.data.groups[idx], app.data.groups[target]] = [app.data.groups[target], app.data.groups[idx]];
+            app.renderResults();
+        }
+    },
+
+    copyToClipboard: () => {
+        let text = `⛳️ 高爾夫分組名單\n${new Date().toLocaleDateString()}\n================\n`;
+        app.data.groups.forEach((g, i) => {
+            if (g.length === 0) return;
+            text += `\n[第 ${i+1} 組] Total HCP: ${g.reduce((s,p)=>s+p.hcp,0)}\n`;
+            g.forEach(p => {
+                text += `- ${p.name} (${p.hcp})\n`;
+            });
+        });
+
+        navigator.clipboard.writeText(text).then(() => {
+            app.showToast("✅ 名單已複製");
+        }).catch(() => {
+            app.showToast("❌ 複製失敗");
+        });
     }
+};
+
+// Init
+window.onload = () => {
+    // Check if we need to load anything on start
+};
 </script>
+
 </body>
 </html>
