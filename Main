@@ -2,155 +2,180 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RG Golf Pairing V13 (UI & Clean Names)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>RG Golf Pairing V15</title>
 <style>
     :root {
-        --rg-clay: #CB5A46;
-        --rg-navy: #002D56;
-        --rg-green: #004E38;
-        --rg-white: #FFFFFF;
-        --rg-grey: #F3F3F3;
-        --rg-female: #C2185B; /* 女性顏色 */
-        --rg-male: #002D56;    /* 男性顏色 */
-        --border-radius: 8px;
+        --primary: #1B5E20;      /* Golf Green */
+        --primary-light: #E8F5E9;
+        --secondary: #002D56;    /* Navy */
+        --accent: #F9A825;       /* Gold/Sand */
+        --bg: #F4F6F8;
+        --white: #FFFFFF;
+        --text: #37474F;
+        --text-light: #90A4AE;
+        --male-color: #0277BD;   /* Blue for Men */
+        --female-color: #C2185B; /* Rose for Women */
+        --radius: 12px;
+        --shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
 
     body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        background-color: var(--rg-grey); color: var(--rg-navy);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: var(--bg); color: var(--text);
         margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
     }
 
-    /* Header */
+    /* --- Header --- */
     header {
-        background-color: var(--rg-navy); color: var(--rg-white);
+        background: var(--white);
         padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
     }
-    header h1 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+    header h1 { margin: 0; font-size: 18px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
+    header .badge { font-size: 10px; background: var(--primary-light); color: var(--primary); padding: 3px 8px; border-radius: 20px; font-weight: bold; }
 
     .container { max-width: 600px; margin: 0 auto; padding: 15px; width: 100%; box-sizing: border-box; flex: 1; }
 
-    /* Steps */
+    /* --- Stepper --- */
     .step-indicator {
-        display: flex; margin-bottom: 20px; background: white;
-        border-radius: 50px; padding: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        display: flex; margin-bottom: 20px; background: var(--white);
+        border-radius: 50px; padding: 5px; box-shadow: var(--shadow);
     }
     .step {
-        flex: 1; text-align: center; padding: 8px; font-size: 13px; font-weight: 600;
-        color: #bbb; cursor: pointer; border-radius: 40px; transition: 0.2s;
+        flex: 1; text-align: center; padding: 10px; font-size: 13px; font-weight: 600;
+        color: var(--text-light); cursor: pointer; border-radius: 40px; transition: 0.3s;
     }
-    .step.active { background-color: var(--rg-clay); color: white; }
+    .step.active { background-color: var(--primary); color: white; box-shadow: 0 2px 5px rgba(27,94,32,0.3); }
 
-    /* Cards */
+    /* --- Cards & Inputs --- */
     .card {
-        background: var(--rg-white); padding: 20px;
-        border-radius: var(--border-radius); box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        margin-bottom: 20px;
+        background: var(--white); padding: 20px;
+        border-radius: var(--radius); box-shadow: var(--shadow);
+        margin-bottom: 20px; animation: fadeIn 0.3s ease-out;
     }
-    .card h2 {
-        margin-top: 0; font-size: 16px; text-transform: uppercase; color: var(--rg-navy);
-        border-left: 5px solid var(--rg-clay); padding-left: 10px; margin-bottom: 15px;
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    h2 {
+        margin: 0 0 15px 0; font-size: 16px; font-weight: 700; color: var(--secondary);
+        display: flex; align-items: center; gap: 8px;
     }
+    h2::before { content: ''; display: block; width: 4px; height: 16px; background: var(--accent); border-radius: 2px; }
 
     textarea {
-        width: 100%; height: 150px; padding: 12px;
-        border: 1px solid #ddd; border-radius: 6px; background: #fafafa;
+        width: 100%; height: 160px; padding: 15px;
+        border: 2px solid #EEE; border-radius: var(--radius); background: #FAFAFA;
         font-family: monospace; font-size: 15px; resize: none; box-sizing: border-box;
+        transition: 0.2s; outline: none;
     }
-    textarea:focus { outline: none; border-color: var(--rg-navy); background: #fff; }
+    textarea:focus { border-color: var(--primary); background: #FFF; }
 
-    /* Buttons */
+    /* --- Buttons --- */
     .btn {
-        padding: 14px; border: none; border-radius: 6px;
-        font-size: 15px; font-weight: 600; cursor: pointer; text-transform: uppercase;
+        padding: 14px; border: none; border-radius: var(--radius);
+        font-size: 15px; font-weight: 700; cursor: pointer;
         display: flex; align-items: center; justify-content: center; gap: 8px;
-        width: 100%; box-sizing: border-box; margin-top: 10px;
-        transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        width: 100%; box-sizing: border-box; margin-top: 12px;
+        transition: 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    .btn:active { transform: translateY(1px); box-shadow: none; }
-    .btn-primary { background-color: var(--rg-clay); color: white; }
-    .btn-secondary { background-color: var(--rg-navy); color: white; }
-    .btn-outline { background: white; border: 1px solid #ddd; color: #666; box-shadow: none; }
-    .btn-green { background: var(--rg-green); color: white; }
-    .btn:disabled { background-color: #ddd; color: #888; cursor: not-allowed; box-shadow: none; }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background-color: var(--primary); color: white; }
+    .btn-secondary { background-color: var(--secondary); color: white; }
+    .btn-outline { background: white; border: 1px solid #DDD; color: var(--text); box-shadow: none; }
+    .btn-green { background: #2E7D32; color: white; }
+    .btn:disabled { background-color: #E0E0E0; color: #9E9E9E; cursor: not-allowed; box-shadow: none; }
 
-    /* List Items in Edit View */
-    .assign-list { display: flex; flex-direction: column; gap: 8px; }
+    /* --- List Item (Step 2) --- */
+    .assign-list { display: flex; flex-direction: column; gap: 10px; }
     .assign-item {
         display: flex; align-items: center; justify-content: space-between;
-        padding: 8px 12px; background: #fff; border: 1px solid #eee; border-radius: 6px;
+        padding: 10px; background: #FFF; border: 1px solid #EEE; border-radius: 8px;
+        transition: 0.2s;
     }
+    .assign-item:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+
     .name-edit {
-        border: none; background: transparent; font-weight: bold; color: var(--rg-navy);
-        font-size: 15px; width: 120px; padding: 4px 0;
-        border-bottom: 1px solid transparent; transition: 0.2s;
+        border: none; background: transparent; font-weight: 600; color: var(--text);
+        font-size: 15px; width: 100%; padding: 5px 0; margin-left: 8px;
     }
-    .name-edit:focus { outline: none; border-bottom: 1px solid var(--rg-clay); background: #fffff0; }
+    .name-edit:focus { outline: none; border-bottom: 2px solid var(--accent); }
 
     .hcp-input {
-        width: 40px; padding: 6px; border: 1px solid #ddd; border-radius: 4px; 
-        text-align: center; font-family: monospace; font-weight: bold; color: #555;
+        width: 45px; padding: 6px; border: 1px solid #DDD; border-radius: 6px; 
+        text-align: center; font-weight: bold; color: var(--secondary); font-size: 14px;
     }
     
     .gender-toggle {
-        width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
-        border-radius: 50%; cursor: pointer; border: 1px solid #eee; margin-right: 10px; font-size: 16px;
-    }
-    .gender-toggle.female { background: #ffeef5; color: var(--rg-female); }
-    .gender-toggle.male { background: #eef7ff; color: var(--rg-male); }
-
-    .btn-del {
-        background: none; border: none; color: #ccc; font-size: 20px; cursor: pointer; margin-left: 8px;
-    }
-    .btn-del:hover { color: #e74c3c; }
-
-    /* Scorecard Results */
-    .scorecard {
-        background: white; border-radius: 8px; overflow: hidden; margin-bottom: 15px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-        border: 1px solid #eee; border-top: 5px solid var(--rg-clay);
-    }
-    .scorecard.invalid { border-color: #e74c3c; border-top-width: 5px; }
-
-    .scorecard-header {
-        padding: 12px 15px; background: #fff; display: flex; justify-content: space-between; align-items: center;
-        border-bottom: 1px solid #f0f0f0;
-    }
-    .group-title { font-weight: 800; color: var(--rg-navy); font-size: 14px; letter-spacing: 0.5px; }
-
-    /* UI Arrows for Ordering */
-    .order-controls { display: flex; gap: 4px; }
-    .btn-icon {
-        background: #f7f7f7; border: 1px solid #eee; border-radius: 4px;
-        color: #666; cursor: pointer; padding: 4px 10px; font-size: 14px;
+        width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+        border-radius: 50%; cursor: pointer; border: 1px solid #EEE; font-size: 14px; flex-shrink: 0;
         transition: 0.2s;
     }
-    .btn-icon:hover { background: #eee; color: var(--rg-navy); }
-    
+    .gender-toggle.female { background: #FCE4EC; color: var(--female-color); border-color: #F8BBD0; }
+    .gender-toggle.male { background: #E3F2FD; color: var(--male-color); border-color: #BBDEFB; }
+
+    .btn-del {
+        background: none; border: none; color: #E57373; font-size: 18px; 
+        cursor: pointer; margin-left: 10px; padding: 5px;
+    }
+
+    /* --- Scorecard (Step 3) --- */
+    .scorecard {
+        background: white; border-radius: var(--radius); overflow: hidden; margin-bottom: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08); 
+        border-left: 6px solid var(--primary);
+    }
+    .scorecard.invalid { border-left-color: #E53935; background: #FFEBEE; }
+
+    .scorecard-header {
+        padding: 10px 15px; background: #FFF; display: flex; justify-content: space-between; align-items: center;
+        border-bottom: 1px solid #F0F0F0;
+    }
+    .group-info { display: flex; align-items: baseline; gap: 8px; }
+    .group-title { font-weight: 800; color: var(--secondary); font-size: 14px; text-transform: uppercase; }
+    .group-stats { font-size: 11px; color: #888; background: #F5F5F5; padding: 2px 6px; border-radius: 4px; }
+
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    td { padding: 10px 15px; border-bottom: 1px solid #f9f9f9; vertical-align: middle; }
+    td { padding: 8px 15px; border-bottom: 1px solid #FAFAFA; vertical-align: middle; }
     tr:last-child td { border-bottom: none; }
 
-    /* Name Coloring */
-    .p-name { font-weight: 600; font-size: 15px; }
-    .p-name.male { color: var(--rg-male); }
-    .p-name.female { color: var(--rg-female); }
+    .p-name { font-weight: 600; font-size: 15px; display: block; margin-bottom: 2px; }
+    .p-name.male { color: var(--male-color); }
+    .p-name.female { color: var(--female-color); }
+
+    .move-select {
+        padding: 2px 6px; border: 1px solid #EEE; border-radius: 4px; background: #FFF;
+        color: #999; font-size: 11px; margin-top: 2px;
+    }
+
+    /* Order Arrows */
+    .order-actions { display: flex; gap: 2px; }
+    .arrow-btn {
+        background: transparent; border: 1px solid #EEE; border-radius: 4px;
+        width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; color: #78909C; transition: 0.2s;
+    }
+    .arrow-btn:hover { background: #ECEFF1; color: var(--secondary); }
+
+    /* Toast Notification */
+    #toast {
+        visibility: hidden; min-width: 250px; background-color: #333; color: #fff;
+        text-align: center; border-radius: 8px; padding: 12px; position: fixed;
+        z-index: 999; left: 50%; bottom: 30px; transform: translateX(-50%); opacity: 0; transition: opacity 0.3s;
+    }
+    #toast.show { visibility: visible; opacity: 1; }
 
     .hidden { display: none !important; }
-    
-    .select-move {
-        padding: 4px; border: 1px solid #eee; border-radius: 4px;
-        color: #999; font-size: 11px; margin-left: 8px;
-    }
+    .info-text { font-size: 12px; color: #78909C; line-height: 1.5; margin-bottom: 10px; }
 </style>
 </head>
 <body>
 
 <header>
-    <h1>RG PAIRING V13</h1>
-    <div style="font-size:11px; opacity:0.8; font-weight:normal;">UI & CLEAN NAMES</div>
+    <div style="display:flex; align-items:center; gap:8px;">
+        <h1>RG PAIRING</h1>
+        <span class="badge">V15</span>
+    </div>
 </header>
 
 <div class="container">
@@ -165,54 +190,57 @@
     <div id="view-1">
         <div class="card">
             <h2>名單輸入</h2>
-            <p style="font-size:13px; color:#666; margin-bottom:12px; line-height:1.5;">
-                請輸入名單。系統將自動：<br>
-                1. 辨識性別與中文姓名<br>
-                2. 移除性別符號，並將中文名置前
-            </p>
-            <textarea id="input-text" placeholder="格式範例：&#10;Jason 林 12&#10;王小明 18&#10;Vikki ❤️ 24"></textarea>
+            <div class="info-text">
+                • 系統將自動把「中文姓名」排在前面<br>
+                • 支援符號、英文、中英混和<br>
+                • 格式：姓名 HCP (一行一人)
+            </div>
+            <textarea id="input-text" placeholder="格式範例：&#10;Jason 林 12&#10;王大明 18&#10;Vikki 👑 24"></textarea>
             
             <button class="btn btn-primary" onclick="processInput()">下一步：解析名單 ➔</button>
         </div>
-        <div style="text-align:center;">
-             <button class="btn btn-outline" style="width:auto; display:inline-block; padding:8px 20px;" onclick="loadDemoData()">載入範例資料</button>
+        <div style="display:flex; gap:10px; justify-content:center;">
+             <button class="btn btn-outline" style="width:auto; padding:8px 20px;" onclick="loadDemoData()">載入範例 (明星版)</button>
+             <button class="btn btn-outline" style="width:auto; padding:8px 20px;" onclick="clearInput()">清空</button>
         </div>
     </div>
 
     <!-- STEP 2: Configure & Edit -->
     <div id="view-2" class="hidden">
         <div class="card">
-            <h2>編輯名單</h2>
-            <div style="margin-bottom:10px; font-size:12px; color:#666; text-align:right;">
-                <span id="player-count-info"></span>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h2>編輯與設定</h2>
+                <span id="player-count-info" style="font-size:12px; font-weight:bold; color:var(--primary);"></span>
             </div>
             
-            <div style="display:flex; gap:5px; margin-bottom:15px; border-bottom:1px dashed #ddd; padding-bottom:15px;">
-                <input id="new-name" class="name-edit" style="flex:2; border:1px solid #ddd; border-radius:4px; padding:8px;" placeholder="姓名">
-                <input id="new-hcp" type="number" class="hcp-input" style="flex:1; width:auto;" placeholder="HCP">
-                <button class="btn-secondary" style="width:50px; margin:0; padding:0;" onclick="manualAddPlayer()">+</button>
+            <!-- Quick Add -->
+            <div style="display:flex; gap:8px; margin-bottom:15px; background:#F1F8E9; padding:8px; border-radius:8px;">
+                <input id="new-name" class="name-edit" style="margin:0; background:white; padding:8px; border-radius:4px;" placeholder="新增姓名...">
+                <input id="new-hcp" type="number" class="hcp-input" style="width:50px; background:white;" placeholder="HCP">
+                <button class="btn-primary" style="width:40px; margin:0;" onclick="manualAddPlayer()">+</button>
             </div>
 
             <div class="assign-list" id="player-list"></div>
 
-            <div style="margin-top:20px; border-top:1px solid #eee; padding-top:20px;">
-                <div style="margin-bottom:12px;">
-                    <label style="font-size:12px; font-weight:700; color:#666; display:block; margin-bottom:6px;">分組策略 (HCP)</label>
-                    <select id="hcp-logic" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-size:14px;">
-                        <option value="total_balanced" selected>⚖️ 實力平均 (每組總差點接近)</option>
-                        <option value="competitive">⚔️ 組內競爭 (同組差點相近)</option>
-                    </select>
-                </div>
-                
-                <div style="margin-bottom:12px;">
-                    <label style="font-size:12px; font-weight:700; color:#666; display:block; margin-bottom:6px;">性別分配</label>
-                    <select id="gender-logic" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-size:14px;">
-                        <option value="balanced" selected>👫 男女混編 (平均分配)</option>
-                        <option value="random">🎲 隨機分配</option>
-                    </select>
+            <div style="margin-top:20px; border-top:1px solid #EEE; padding-top:20px;">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div>
+                        <label style="font-size:11px; font-weight:700; color:#888; text-transform:uppercase;">HCP 策略</label>
+                        <select id="hcp-logic" style="width:100%; padding:8px; border-radius:6px; border:1px solid #DDD; margin-top:4px;">
+                            <option value="total_balanced" selected>⚖️ 總和平均</option>
+                            <option value="competitive">⚔️ 實力相近</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:11px; font-weight:700; color:#888; text-transform:uppercase;">性別分配</label>
+                        <select id="gender-logic" style="width:100%; padding:8px; border-radius:6px; border:1px solid #DDD; margin-top:4px;">
+                            <option value="balanced" selected>👫 平均混編</option>
+                            <option value="random">🎲 隨機分配</option>
+                        </select>
+                    </div>
                 </div>
 
-                <button class="btn btn-secondary" onclick="generateResult()">執行分組演算 ⛳</button>
+                <button class="btn btn-secondary" onclick="generateResult()">開始分組 ⛳</button>
             </div>
         </div>
     </div>
@@ -221,13 +249,17 @@
     <div id="view-3" class="hidden">
         <div style="margin-bottom:15px; display:flex; gap:10px;">
             <button class="btn btn-outline" style="margin:0; flex:1;" onclick="goToStep(1)">↺ 重來</button>
-            <button id="btn-export" class="btn btn-green" style="margin:0; flex:2;" onclick="exportText()" disabled>📋 複製文字名單</button>
+            <button id="btn-export" class="btn btn-green" style="margin:0; flex:2;" onclick="exportText()" disabled>📋 複製名單</button>
         </div>
         
         <div id="result-container"></div>
+        <div style="height:30px;"></div>
     </div>
 
 </div>
+
+<!-- Toast -->
+<div id="toast">已複製到剪貼簿</div>
 
 <script>
     let allPlayers = [];
@@ -235,26 +267,27 @@
     const MAX_PER_GROUP_STRICT = 4;
     const MANUAL_MAX_PER_GROUP = 5;
 
-    let MAX_POSSIBLE_GROUPS = 0; 
-    let finalGroups = []; 
     let idCounter = 1;
+    let finalGroups = [];
 
+    // --- Demo Data (International Stars) ---
     function loadDemoData() {
         document.getElementById('input-text').value = 
-`1. Jason 林 12
-2. 👑 5
-3. vikki 左浩毓❤️ 24
-4. Philip 呂宥林 8
-5. ReeAnne 洪藜恩♥️ 28
-6. 💋 18
-7. Amy 陳 30
-8. Kevin Wang 5`;
+`1. Tom 湯姆克魯斯 12
+2. Taylor Swift 泰勒絲 24
+3. 👑 The Rock 15
+4. Scarlett 黑寡婦 🕷️ 18
+5. Tiger Woods 0
+6. Stephen Curry 🏀 8
+7. Jennifer L. 珍妮佛 28
+8. Leonardo 李奧納多 14`;
     }
+    function clearInput() { document.getElementById('input-text').value = ''; }
 
-    // --- 1. Parsing Logic (Clean & Reorder) ---
+    // --- Step 1: Logic ---
     function processInput() {
         const raw = document.getElementById('input-text').value.trim();
-        if (!raw) { alert("請輸入資料"); return; }
+        if (!raw) { showToast("請輸入資料"); return; }
         
         const lines = raw.split('\n');
         allPlayers = [];
@@ -268,8 +301,10 @@
         lines.forEach(line => {
             let cleanLine = line.trim();
             if (!cleanLine) return;
+            // 1. Remove leading ranking numbers (e.g., "1. ")
             cleanLine = cleanLine.replace(leadingNumbers, '').trim(); 
 
+            // 2. Extract HCP (numbers at the end)
             let hcp = 0;
             const hcpMatch = cleanLine.match(/(\d+(\.\d+)?)$/);
             if (hcpMatch) {
@@ -277,82 +312,56 @@
                 cleanLine = cleanLine.substring(0, hcpMatch.index).trim();
             }
 
-            // Detect Gender
+            // 3. Detect Gender (Check before cleaning name)
             let isFemale = false;
+            // Check regex text keywords
             if (new RegExp(femaleKeywords.join('|'), 'i').test(cleanLine)) isFemale = true;
+            // Check emojis
             if (femaleEmojis.some(emoji => cleanLine.includes(emoji))) isFemale = true;
-
-            // Clean Name: Remove Gender Keywords & Gender Emojis
-            let namePart = cleanLine;
-            namePart = namePart.replace(new RegExp(femaleKeywords.join('|'), 'gi'), '');
-            // Remove specific gender symbols
-            femaleEmojis.forEach(e => { namePart = namePart.split(e).join(''); });
             
+            // Auto detect common female names (Simple heuristic for demo)
+            if (/Taylor|Scarlett|Jennifer|Amy|Vikki|Lisa/i.test(cleanLine)) isFemale = true;
+
+            // 4. Clean Name
+            // Remove text keywords
+            let namePart = cleanLine.replace(new RegExp(femaleKeywords.join('|'), 'gi'), '');
+            // Remove specific gender emojis (but keep other emojis if needed)
+            femaleEmojis.forEach(e => { namePart = namePart.split(e).join(''); });
             namePart = namePart.trim();
 
-            // Fallback: If name became empty (e.g. only had symbol), use original stripped of numbers
-            if(namePart.length === 0) {
-                 // Try to keep at least something recognizable, or generic
-                 namePart = cleanLine.trim() || "Player"; 
-            }
-
-            // Reorder: Chinese First, English Second
+            // 5. Robust Reordering: Chinese First
+            // Extract Chinese characters
             const chineseMatch = namePart.match(/[\u4e00-\u9fa5]+/g);
             const chineseStr = chineseMatch ? chineseMatch.join('') : "";
             
-            // Remove Chinese characters to get English/Symbols part
+            // Remove Chinese to get the rest (English, numbers inside name, other symbols)
             let engStr = namePart.replace(/[\u4e00-\u9fa5]+/g, '').trim();
 
+            // Reassemble
             let finalName = "";
             if (chineseStr && engStr) {
                 finalName = `${chineseStr} ${engStr}`;
             } else {
-                finalName = chineseStr || engStr;
+                // If only one part exists
+                finalName = chineseStr || engStr || "Player";
             }
 
             allPlayers.push({
                 id: idCounter++,
                 name: finalName,
                 hcp: hcp, 
-                gender: isFemale ? 'F' : 'M',
-                group: 0
+                gender: isFemale ? 'F' : 'M'
             });
         });
 
-        updateMaxGroups();
+        updateCountInfo();
         renderPlayerList();
         goToStep(2);
     }
 
-    function updateMaxGroups() {
-        if (allPlayers.length === 0) return;
-        MAX_POSSIBLE_GROUPS = Math.floor(allPlayers.length / 3);
-        if(MAX_POSSIBLE_GROUPS < 1) MAX_POSSIBLE_GROUPS = 1;
-        MAX_POSSIBLE_GROUPS += 1; // Allow one extra for flexibility
+    // --- Step 2: Edit UI ---
+    function updateCountInfo() {
         document.getElementById('player-count-info').innerText = `共 ${allPlayers.length} 人`;
-    }
-
-    // --- 2. Edit UI ---
-    
-    function manualAddPlayer() {
-        const nameInput = document.getElementById('new-name');
-        const hcpInput = document.getElementById('new-hcp');
-        const name = nameInput.value.trim();
-        const hcp = parseFloat(hcpInput.value) || 0;
-
-        if (name) {
-            allPlayers.push({ id: idCounter++, name: name, hcp: hcp, gender: 'M', group: 0 });
-            nameInput.value = ''; hcpInput.value = '';
-            updateMaxGroups(); renderPlayerList();
-        }
-    }
-
-    function updatePlayerName(pid, val) { allPlayers.find(x => x.id === pid).name = val.trim(); }
-    function updatePlayerHcp(pid, val) { allPlayers.find(x => x.id === pid).hcp = parseFloat(val) || 0; }
-    function deletePlayer(pid) { allPlayers = allPlayers.filter(p => p.id !== pid); updateMaxGroups(); renderPlayerList(); }
-    function toggleGender(pid) { 
-        const p = allPlayers.find(x => x.id === pid);
-        if (p) { p.gender = p.gender === 'M' ? 'F' : 'M'; renderPlayerList(); }
     }
 
     function renderPlayerList() {
@@ -366,7 +375,7 @@
             const genderIcon = p.gender === 'F' ? '♀' : '♂';
 
             div.innerHTML = `
-                <div style="display:flex; align-items:center;">
+                <div style="display:flex; align-items:center; flex:1;">
                     <div class="gender-toggle ${genderClass}" onclick="toggleGender(${p.id})">${genderIcon}</div>
                     <input type="text" class="name-edit" value="${p.name}" onchange="updatePlayerName(${p.id}, this.value)">
                 </div>
@@ -379,69 +388,87 @@
         });
     }
 
-    // --- 3. Algorithm ---
+    // Edit Actions
+    function manualAddPlayer() {
+        const nameInput = document.getElementById('new-name');
+        const hcpInput = document.getElementById('new-hcp');
+        const name = nameInput.value.trim();
+        const hcp = parseFloat(hcpInput.value) || 0;
+        if (name) {
+            allPlayers.push({ id: idCounter++, name: name, hcp: hcp, gender: 'M' });
+            nameInput.value = ''; hcpInput.value = '';
+            updateCountInfo(); renderPlayerList();
+        }
+    }
+    function deletePlayer(pid) {
+        allPlayers = allPlayers.filter(p => p.id !== pid);
+        updateCountInfo(); renderPlayerList();
+    }
+    function updatePlayerName(pid, val) { allPlayers.find(x => x.id === pid).name = val.trim(); }
+    function updatePlayerHcp(pid, val) { allPlayers.find(x => x.id === pid).hcp = parseFloat(val) || 0; }
+    function toggleGender(pid) { 
+        const p = allPlayers.find(x => x.id === pid);
+        if (p) { p.gender = p.gender === 'M' ? 'F' : 'M'; renderPlayerList(); }
+    }
+
+    // --- Step 3: Algorithm ---
     function generateResult() {
-        if(allPlayers.length === 0) return;
+        if(allPlayers.length === 0) { showToast("名單為空"); return; }
+        
         const genderLogic = document.getElementById('gender-logic').value; 
         const hcpLogic = document.getElementById('hcp-logic').value;
         
-        // Simple Reset & Calculation logic
-        // For UI simplicity, we just recalculate optimal groups based on list
-        let pool = [...allPlayers];
-        
-        // Sort Pool
-        if(genderLogic === 'balanced') {
-            pool.sort((a,b) => {
-                if(a.gender !== b.gender) return a.gender === 'F' ? -1 : 1; // F first
-                return b.hcp - a.hcp;
-            });
-        } else {
-            pool.sort((a,b) => b.hcp - a.hcp);
-        }
-
+        let pool = JSON.parse(JSON.stringify(allPlayers)); // Deep copy
         const totalPeople = pool.length;
         const numGroups = Math.ceil(totalPeople / 4);
         let groups = Array.from({length: numGroups}, () => []);
 
-        // Snake distribution or Balance logic
-        if (hcpLogic === 'total_balanced') {
-             // Zigzag distribution by HCP
-             // But first, separate genders if balanced logic is strict? 
-             // Let's use simple snake fill
-             pool.sort((a,b) => b.hcp - a.hcp); // Strict HCP sort
-             
-             // If Gender balanced is required, we distribute Ladies first
-             if(genderLogic === 'balanced') {
-                 const ladies = pool.filter(p=>p.gender==='F');
-                 const men = pool.filter(p=>p.gender==='M');
-                 
-                 // Distribute Ladies
-                 let gIdx = 0;
-                 ladies.forEach(p => {
-                     groups[gIdx].push(p);
-                     gIdx = (gIdx + 1) % numGroups;
-                 });
-                 // Distribute Men (reverse direction to balance HCP?)
-                 // Simple fill for now
-                 men.forEach(p => {
-                     // Find group with lowest total HCP or fewer people
-                     // Simple round robin
-                     groups[gIdx].push(p);
-                     gIdx = (gIdx + 1) % numGroups;
-                 });
-             } else {
-                 // Pure Snake
-                 pool.forEach((p, i) => {
-                     const pos = i % numGroups;
-                     const gIdx = (Math.floor(i / numGroups) % 2 === 0) ? pos : (numGroups - 1 - pos);
-                     groups[gIdx].push(p);
-                 });
-             }
+        // Sort Helper
+        const sortByHcpDesc = (list) => list.sort((a,b) => b.hcp - a.hcp);
+        const sortByHcpAsc = (list) => list.sort((a,b) => a.hcp - b.hcp);
 
+        if (hcpLogic === 'total_balanced') {
+            // S-Shape (Snake) Distribution
+            if(genderLogic === 'balanced') {
+                // Separate genders
+                let ladies = pool.filter(p=>p.gender==='F');
+                let men = pool.filter(p=>p.gender==='M');
+                sortByHcpDesc(ladies);
+                sortByHcpDesc(men);
+
+                // Distribute Ladies (Snake)
+                ladies.forEach((p, i) => {
+                    let pos = i % numGroups;
+                    let gIdx = (Math.floor(i / numGroups) % 2 === 0) ? pos : (numGroups - 1 - pos);
+                    groups[gIdx].push(p);
+                });
+
+                // Distribute Men 
+                men.forEach(p => {
+                    // Greedy fill: find group with < 4 people and lowest total HCP
+                    let eligible = groups.map((g, i) => ({id: i, count: g.length, total: g.reduce((s,x)=>s+x.hcp,0)}))
+                                         .filter(g => g.count < MAX_PER_GROUP_STRICT);
+                    
+                    if(eligible.length === 0) { 
+                        groups[groups.length-1].push(p); // Overflow
+                    } else {
+                        eligible.sort((a,b) => a.total - b.total);
+                        groups[eligible[0].id].push(p);
+                    }
+                });
+
+            } else {
+                // Mixed gender, just sort by HCP
+                sortByHcpDesc(pool);
+                pool.forEach((p, i) => {
+                    let pos = i % numGroups;
+                    let gIdx = (Math.floor(i / numGroups) % 2 === 0) ? pos : (numGroups - 1 - pos);
+                    groups[gIdx].push(p);
+                });
+            }
         } else {
-            // Competitive: Group by HCP chunks
-            // 1-4 in G1, 5-8 in G2
-            pool.sort((a,b) => a.hcp - b.hcp); // Low hcp first
+            // Competitive: Group by HCP slices (1-4, 5-8...)
+            sortByHcpAsc(pool);
             pool.forEach((p, i) => {
                 const gIdx = Math.floor(i / 4);
                 if(groups[gIdx]) groups[gIdx].push(p);
@@ -449,16 +476,12 @@
             });
         }
 
-        // Assign Group IDs back to object
-        groups.forEach((g, idx) => {
-            g.forEach(p => p.group = idx + 1);
-        });
         finalGroups = groups;
         renderResults();
         goToStep(3);
     }
 
-    // --- 4. Render Results (Clean UI) ---
+    // --- Step 3: Render ---
     function renderResults() {
         const container = document.getElementById('result-container');
         const btnExport = document.getElementById('btn-export');
@@ -469,9 +492,7 @@
             if(g.length === 0) return;
             
             const totalHcp = g.reduce((s,p)=>s+p.hcp,0);
-            
-            // Sort by HCP inside group for display
-            g.sort((a,b) => a.hcp - b.hcp);
+            g.sort((a,b) => a.hcp - b.hcp); // Display order: Low to High
 
             let isValid = (g.length >= MIN_PER_GROUP && g.length <= MAX_PER_GROUP_STRICT);
             if (!isValid) allValid = false;
@@ -479,44 +500,45 @@
             let cardClass = isValid ? "scorecard" : "scorecard invalid";
 
             let rows = g.map(p => {
-                // Color class based on gender
                 const colorClass = p.gender === 'F' ? 'female' : 'male';
                 
-                // Move Select
+                // Move Options
                 let moveOpts = "";
                 for(let i=0; i<finalGroups.length; i++) {
                      let selected = (i === idx) ? "selected" : "";
-                     moveOpts += `<option value="${i}" ${selected}>G${i+1}</option>`;
+                     moveOpts += `<option value="${i}" ${selected}>移至 G${i+1}</option>`;
                 }
 
                 return `
                 <tr>
                     <td>
-                        <div style="display:flex; align-items:center;">
-                            <span class="p-name ${colorClass}">${p.name}</span>
-                            <select class="select-move" onchange="manualMove(${p.id}, ${idx}, this.value)">${moveOpts}</select>
+                        <span class="p-name ${colorClass}">${p.name}</span>
+                        <div style="display:flex;">
+                            <select class="move-select" onchange="manualMove(${p.id}, ${idx}, this.value)">${moveOpts}</select>
                         </div>
                     </td>
-                    <td style="text-align:right; font-family:monospace; font-weight:bold; color:#666;">${p.hcp}</td>
+                    <td style="text-align:right; font-weight:700; color:#546E7A;">${p.hcp}</td>
                 </tr>`;
             }).join('');
 
-            // UI Buttons (Simple Arrows)
-            let upBtn = idx > 0 ? `<button class="btn-icon" onclick="moveGroupOrder(${idx}, -1)">▲</button>` : `<button class="btn-icon" style="visibility:hidden">▲</button>`;
-            let downBtn = idx < finalGroups.length - 1 ? `<button class="btn-icon" onclick="moveGroupOrder(${idx}, 1)">▼</button>` : `<button class="btn-icon" style="visibility:hidden">▼</button>`;
+            // Arrow Controls
+            let upBtn = idx > 0 ? 
+                `<button class="arrow-btn" onclick="swapGroup(${idx}, -1)">▲</button>` : `<div style="width:28px;"></div>`;
+            let downBtn = idx < finalGroups.length - 1 ? 
+                `<button class="arrow-btn" onclick="swapGroup(${idx}, 1)">▼</button>` : `<div style="width:28px;"></div>`;
 
             container.innerHTML += `
                 <div class="${cardClass}">
                     <div class="scorecard-header">
-                        <div class="group-title">GROUP ${idx+1}</div>
-                        <div class="order-controls">
+                        <div class="group-info">
+                            <span class="group-title">GROUP ${idx+1}</span>
+                            <span class="group-stats">HCP ${totalHcp.toFixed(1)}</span>
+                        </div>
+                        <div class="order-actions">
                             ${upBtn} ${downBtn}
                         </div>
                     </div>
                     <table>${rows}</table>
-                    <div style="padding:8px 15px; background:#fafafa; font-size:12px; color:#888; text-align:right; border-top:1px solid #eee;">
-                        Total HCP: <strong>${totalHcp.toFixed(1)}</strong>
-                    </div>
                 </div>`;
         });
 
@@ -531,12 +553,17 @@
         }
     }
 
+    // --- Actions ---
     function manualMove(pid, fromIdx, toIdx) {
         fromIdx = parseInt(fromIdx); toIdx = parseInt(toIdx);
         if(fromIdx === toIdx) return;
+        
         if(finalGroups[toIdx].length >= MANUAL_MAX_PER_GROUP) {
-            alert("該組人數已達上限"); renderResults(); return;
+            showToast("該組人數已達上限");
+            renderResults(); // Reset dropdown
+            return;
         }
+        
         let pIndex = finalGroups[fromIdx].findIndex(p => p.id === pid);
         if(pIndex > -1) {
             let player = finalGroups[fromIdx].splice(pIndex, 1)[0];
@@ -545,7 +572,7 @@
         }
     }
 
-    function moveGroupOrder(index, direction) {
+    function swapGroup(index, direction) {
         let newIndex = index + direction;
         if(newIndex < 0 || newIndex >= finalGroups.length) return;
         [finalGroups[index], finalGroups[newIndex]] = [finalGroups[newIndex], finalGroups[index]];
@@ -563,7 +590,19 @@
             let total = g.reduce((s,p)=>s+p.hcp,0);
             text += `> Total HCP: ${total.toFixed(1)}\n`;
         });
-        navigator.clipboard.writeText(text).then(() => { alert("名單已複製！"); });
+        
+        navigator.clipboard.writeText(text).then(() => {
+            showToast("✅ 名單已複製");
+        }).catch(() => {
+            showToast("❌ 複製失敗");
+        });
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.innerText = msg;
+        t.className = "show";
+        setTimeout(() => { t.className = t.className.replace("show", ""); }, 3000);
     }
 
     function goToStep(n) {
@@ -571,6 +610,7 @@
         document.getElementById(`tab-${n}`).classList.add('active');
         [1,2,3].forEach(i => document.getElementById(`view-${i}`).classList.add('hidden'));
         document.getElementById(`view-${n}`).classList.remove('hidden');
+        window.scrollTo(0,0);
     }
 </script>
 </body>
